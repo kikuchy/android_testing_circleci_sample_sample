@@ -52,5 +52,5 @@ workflows:
     jobs:
       - build
       - acceptance:
-        requires:
-          - build
+          requires:
+            - build
