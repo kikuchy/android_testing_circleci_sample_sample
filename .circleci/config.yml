@@ -38,11 +38,25 @@ jobs:
     steps:
       - checkout
       - run: echo "qa"
+  release:
+    working_directory: ~/code
+    docker:
+      - image: circleci/android:api-28-alpha
+    steps:
+      - checkout
+      - run: echo "qa"
 
 workflows:
   version: 2
   deployment_pipeline:
     jobs:
       - build
-      - acceptance
-      - qa
+      - acceptance:
+        requires:
+          - build
+      - qa:
+        requires:
+          - acceptance
+      - release:
+        requires:
+          - qa
