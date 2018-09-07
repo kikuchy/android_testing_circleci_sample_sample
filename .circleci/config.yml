@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  build:
+  commit:
     working_directory: ~/code
     docker:
       - image: circleci/android:api-28-alpha
@@ -31,32 +31,32 @@ jobs:
     steps:
       - checkout
       - run: echo "acceptance"
-  qa:
+  uat:
     working_directory: ~/code
     docker:
       - image: circleci/android:api-28-alpha
     steps:
       - checkout
-      - run: echo "qa"
+      - run: echo "uat"
   release:
     working_directory: ~/code
     docker:
       - image: circleci/android:api-28-alpha
     steps:
       - checkout
-      - run: echo "qa"
+      - run: echo "release"
 
 workflows:
   version: 2
   deployment_pipeline:
     jobs:
-      - build
+      - commit
       - acceptance:
           requires:
             - build
-      - qa:
+      - uat:
           requires:
             - acceptance
       - release:
           requires:
-            - qa
+            - uat
