@@ -54,3 +54,9 @@ workflows:
       - acceptance:
           requires:
             - build
+      - qa:
+          requires:
+            - acceptance
+      - release:
+          requires:
+            - qa
