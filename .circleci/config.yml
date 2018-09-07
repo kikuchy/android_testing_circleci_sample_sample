@@ -6,12 +6,12 @@ jobs:
       - image: circleci/android:api-28-alpha
     steps:
       - checkout
-      - restore_cache: # ①
+      - restore_cache:
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
       - run:
           name: Download Dependencies
           command: ./gradlew androidDependencies
-      - save_cache: # ②
+      - save_cache:
           paths:
             - ~/.gradle
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
@@ -21,3 +21,6 @@ jobs:
       - run:
           name: Run Inspection
           command: ./gradlew lint
+      - run:
+          name: Run Tests
+          command: ./gradlew test
