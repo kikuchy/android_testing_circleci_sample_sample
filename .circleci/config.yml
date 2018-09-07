@@ -1,0 +1,14 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/code
+    docker:
+      - image: circleci/android:api-28-alpha
+    steps:
+      - checkout
+      - run: # ①
+          name: Download Dependencies
+          command: ./gradlew androidDependencies
+      - run: # ②
+          name: Run Compile
+          command: ./gradlew assembleDebug
