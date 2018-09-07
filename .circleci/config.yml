@@ -26,18 +26,18 @@ jobs:
           command: ./gradlew test
   acceptance:
     working_directory: ~/code
-      docker:
-        - image: circleci/android:api-28-alpha
-      steps:
-        - checkout
-        - run: echo "acceptance"
+    docker:
+      - image: circleci/android:api-28-alpha
+    steps:
+      - checkout
+      - run: echo "acceptance"
   qa:
     working_directory: ~/code
-      docker:
-        - image: circleci/android:api-28-alpha
-      steps:
-        - checkout
-        - run: echo "qa"
+    docker:
+      - image: circleci/android:api-28-alpha
+    steps:
+      - checkout
+      - run: echo "qa"
 
 workflows:
   version: 2
