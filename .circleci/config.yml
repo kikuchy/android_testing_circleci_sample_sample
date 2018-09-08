@@ -26,7 +26,7 @@ jobs:
           command: ./gradlew jacocoTestReport
       - run:
           name: Run Save coverage
-          command: <(curl -s https://codecov.io/bash) -t ${CODECOV_TOKEN}
+          command: codecov #<(curl -s https://codecov.io/bash) -t ${CODECOV_TOKEN}
       - run:
           name: Run Save test results
           command: |
