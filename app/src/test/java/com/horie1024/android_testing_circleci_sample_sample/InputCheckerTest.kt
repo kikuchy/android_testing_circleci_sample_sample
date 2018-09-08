@@ -22,7 +22,7 @@ class InputCheckerTest {
     @Test
     fun isValid_givenLessThan3_returnsFalse() {
         val actual = target.isValid("ab")
-        assertThat(actual, `is`(false))
+        assertThat(actual, `is`(true))
     }
 
     @Test
