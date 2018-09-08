@@ -25,8 +25,11 @@ jobs:
           name: Run Tests
           command: ./gradlew jacocoTestReport
       - run:
-          name: Run Save coverage
-          command: codecov #<(curl -s https://codecov.io/bash) -t ${CODECOV_TOKEN}
+          name: Run Save coverage #codecov #<(curl -s https://codecov.io/bash) -t ${CODECOV_TOKEN}
+          command: |
+              curl -s https://codecov.io/bash > .codecov
+              chmod +x .codecov
+              ./.codecov
       - run:
           name: Run Save test results
           command: |
@@ -37,3 +40,5 @@ jobs:
           path: ~/junit
       - store_artifacts:
           path: ~/junit
+
+
