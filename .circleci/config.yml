@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  build:
+  commit:
     working_directory: ~/code
     docker:
       - image: circleci/android:api-28-alpha
@@ -22,16 +22,10 @@ jobs:
           name: Run Inspection
           command: ./gradlew lint
       - run:
-          name: Run Save test results
-          command: |
-              mkdir -p ~/lint/
-              find . -type f -regex ".*/build/reports/lint-results.xml" -exec cp {} ~/lint/ \;
-          when: always
-      - run:
           name: Run Tests
           command: ./gradlew jacocoTestReport
       - run:
-          name: Run Save coverage #codecov #<(curl -s https://codecov.io/bash) -t ${CODECOV_TOKEN}
+          name: Run Save coverage
           command: |
               curl -s https://codecov.io/bash > .codecov
               chmod +x .codecov
@@ -43,8 +37,49 @@ jobs:
               find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} ~/junit/ \;
           when: always
       - store_test_results:
-          path: ~/junit
-      - store_artifacts:
-          path: ~/junit
+                path: ~/junit
+      - run:
+          name: Run Deploy
+          command: |
+              curl \
+                -F "token=${DEPLOY_GATE_API_KEY}" \
+                -F "file=@app/build/outputs/apk/debug/app-debug.apk" \
+                -F "message=sample" \
+                https://deploygate.com/api/users/horie1024/apps
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+  acceptance:
+    working_directory: ~/code
+    docker:
+      - image: circleci/android:api-28-alpha
+    steps:
+      - run: ls -la
+  uat:
+    working_directory: ~/code
+    docker:
+      - image: circleci/android:api-28-alpha
+    steps:
+      - run: ./gradlew tasks
+  release:
+    working_directory: ~/code
+    docker:
+      - image: circleci/android:api-28-alpha
+    steps:
+      - run: echo "release"
 
-
+workflows:
+  version: 2
+  deployment_pipeline:
+    jobs:
+      - commit
+      - acceptance:
+          requires:
+            - commit
+      - uat:
+          requires:
+            - acceptance
+      - release:
+          requires:
+            - uat
