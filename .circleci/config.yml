@@ -84,6 +84,7 @@ workflows:
           requires:
             - commit
       - uat:
+          type: approval
           requires:
             - acceptance
       - release:
