@@ -59,7 +59,7 @@ jobs:
           at: .
       - run:
           name: Store Google Service Account
-          command: echo $GCLOUD_SERVICE_KEY > ${HOME}/gcloud-service-key.json
+          command: echo $GCLOUD_SERVICE_KEY | base64 --decode > ${HOME}/gcloud-service-key.json
       - run:
           name: Authorize gcloud and set config defaults
           command: |
@@ -75,7 +75,6 @@ jobs:
               --app app/build/outputs/apk/debug/app-debug.apk" \
               --test app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk \
               --results-bucket cloud-test-${GOOGLE_PROJECT_ID}
-      - run: ls -la
   uat:
     working_directory: ~/code
     docker:
