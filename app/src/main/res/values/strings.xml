@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">android_testing_circleci_sample_sample</string>
+    <string name="login">login</string>
+    <string name="hello_world">hello_world</string>
 </resources>
