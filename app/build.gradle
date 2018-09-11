@@ -16,7 +16,18 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+    signingConfigs {
+        ci {
+            keyAlias "ci-key-alias"
+            keyPassword "debugkeypass"
+            storeFile "ci-key.keystore"
+            storePassword "debugkeypass"
+        }
+    }
     buildTypes {
+        debug {
+            signingConfig signingConfigs.ci
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
