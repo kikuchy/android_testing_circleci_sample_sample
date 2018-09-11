@@ -20,7 +20,7 @@ android {
         ci {
             keyAlias "ci-key-alias"
             keyPassword "debugkeypass"
-            storeFile "ci-key.keystore"
+            storeFile file("ci-key.keystore")
             storePassword "debugkeypass"
         }
     }
