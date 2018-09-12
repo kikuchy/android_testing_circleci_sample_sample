@@ -78,13 +78,11 @@ jobs:
                 --results-bucket cloud-test-${GOOGLE_PROJECT_ID}
       - run:
           name: Install gsutil dependency and copy test results data
+          when: always
           command: |
               sudo pip install -U crcmod
               mkdir -p ~/gsutil/
               sudo gsutil -m cp -r -U `sudo gsutil ls gs://cloud-test-test-project-8a3d9 | tail -1` ~/gsutil/ | true
-              ls -la ~/gsutil/
-              mkdir -p ~/espresso/
-              find . -type f -regex "~/gsutil/**.*xml" -exec cp {} ~/espresso/ \;
       - store_artifacts:
          path: ~/gsutil/
       - store_test_results:
