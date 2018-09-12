@@ -1,7 +1,7 @@
 instrumentation-test:
   type: instrumentation
-  app: app/build/outputs/apk/app-debug.apk
-  test: app/build/outputs/apk/app-debug-androidTest.apk
+  app: app/build/outputs/apk/debug/app-debug.apk
+  test: app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
   device-ids: Nexus5
   os-version-ids: 21
   locales: ja_JP
