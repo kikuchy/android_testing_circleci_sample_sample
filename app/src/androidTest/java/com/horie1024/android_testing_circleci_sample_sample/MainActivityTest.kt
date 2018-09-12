@@ -20,6 +20,6 @@ class MainActivityTest {
     @Test
     fun isShowHelloWorldText() {
         onView(withId(R.id.login)).perform(click())
-        onView(withText("test")).check(matches(isDisplayed()))// R.string.hello_world
+        onView(withText("hello universe")).check(matches(isDisplayed()))// R.string.hello_world
     }
 }
