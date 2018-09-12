@@ -2,7 +2,6 @@ instrumentation-test:
   type: instrumentation
   app: app/build/outputs/apk/app-debug.apk
   test: app/build/outputs/apk/app-debug-androidTest.apk
-  results-bucket: cloud-test-${GOOGLE_PROJECT_ID}
   device-ids: Nexus5
   os-version-ids: 21
   locales: ja_JP

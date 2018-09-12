@@ -71,7 +71,9 @@ jobs:
       - run:
           name: Test with Firebase Test Lab
           command: >
-              sudo gcloud firebase test android run test_settings.yml:instrumentation-test
+              sudo gcloud firebase test android run \
+                test_settings.yml:instrumentation-test \
+                --results-bucket cloud-test-${GOOGLE_PROJECT_ID}
       - run:
           name: Install gsutil dependency and copy test results data
           when: always
