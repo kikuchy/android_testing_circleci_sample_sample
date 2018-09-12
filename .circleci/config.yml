@@ -37,7 +37,7 @@ jobs:
               find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} ~/junit/ \;
           when: always
       - store_test_results:
-                path: ~/junit
+          path: ~/junit
       - run:
           name: Run Deploy
           command: |
@@ -83,6 +83,9 @@ jobs:
               mkdir -p ~/gsutil/
               sudo gsutil -m cp -r -U `sudo gsutil ls gs://cloud-test-test-project-8a3d9 | tail -1` ~/gsutil/ | true
               ls -la ~/gsutil/
+     - store_artifacts:
+         path: ~/gsutil/
+
   uat:
     working_directory: ~/code
     docker:
