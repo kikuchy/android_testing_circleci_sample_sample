@@ -80,7 +80,9 @@ jobs:
           name: Install gsutil dependency and copy test results data
           command: |
               sudo pip install -U crcmod
-              sudo gsutil -m cp -r -U `sudo gsutil ls gs://cloud-test-test-project-8a3d9 | tail -1` ${CIRCLE_ARTIFACTS}/ | true
+              mkdir -p ~/gsutil/
+              sudo gsutil -m cp -r -U `sudo gsutil ls gs://cloud-test-test-project-8a3d9 | tail -1` ~/gsutil/ | true
+              ls -la ~/gsutil/
   uat:
     working_directory: ~/code
     docker:
