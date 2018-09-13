@@ -4,6 +4,10 @@ instrumentation-test:
   test: app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
   device:
     - model: Nexus5
-      version: 21
+      version: [21, 22]
+      locale: ja_JP
+      orientation: portrait
+    - model: mata
+      version: 25
       locale: ja_JP
       orientation: portrait
