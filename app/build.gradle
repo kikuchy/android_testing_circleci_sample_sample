@@ -27,7 +27,7 @@ android {
             keyAlias System.env.RELEASE_ALIAS
             keyPassword "$System.env.RELEASE_ALIAS_PASS"
             storeFile file("release.keystore.jks")
-            storePassword System.getEnv()["RELEASE_KEYSTORE_PASS"]
+            storePassword "$System.env.RELEASE_KEYSTORE_PASS"
         }
     }
     buildTypes {
