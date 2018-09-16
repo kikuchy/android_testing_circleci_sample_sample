@@ -120,7 +120,7 @@ workflows:
       - commit
       - acceptance:
           requires:
-            - hold
+            - commit
       - prepare_uat:
           requires:
             - acceptance
