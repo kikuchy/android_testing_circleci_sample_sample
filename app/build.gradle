@@ -7,7 +7,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'jacoco-android'
 
 android {
-    compileSdkVersion 23
+    compileSdkVersion 25
     defaultConfig {
         applicationId "com.horie1024.android_testing_circleci_sample_sample"
         minSdkVersion 21
