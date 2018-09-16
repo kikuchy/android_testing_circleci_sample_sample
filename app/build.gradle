@@ -24,7 +24,7 @@ android {
             storePassword "debugkeypass"
         }
         release {
-            keyAlias System.getEnv()["RELEASE_ALIAS"]
+            keyAlias System.getEnv("RELEASE_ALIAS")
             keyPassword System.getEnv()["RELEASE_ALIAS_PASS"]
             storeFile file("release.keystore.jks")
             storePassword System.getEnv()["RELEASE_KEYSTORE_PASS"]
