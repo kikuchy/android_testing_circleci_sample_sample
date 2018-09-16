@@ -20,7 +20,7 @@ jobs:
           command: |
               openssl aes-256-cbc -d \
                   -in app/release.keystore.jks.encrypted\
-                  -out app/release.keystore.jks -k $DECRYPTED_KEY
+                  -out app/release.keystore.jks -k $DECRYPTED_KEY -md md5
       - run:
           name: Run assembleRelease
           command: ./gradlew assembleRelease
