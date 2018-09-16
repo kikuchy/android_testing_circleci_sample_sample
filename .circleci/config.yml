@@ -50,6 +50,7 @@ jobs:
           root: .
           paths:
             - .
+
   acceptance:
     working_directory: ~/code
     docker:
@@ -86,7 +87,7 @@ jobs:
       - store_test_results:
          path: ~/gsutil/
 
-  uat:
+  prepare_uat:
     working_directory: ~/code
     docker:
       - image: circleci/android:api-28-alpha
@@ -94,6 +95,7 @@ jobs:
       - attach_workspace:
           at: .
       - run: ./gradlew tasks
+
   release:
     working_directory: ~/code
     docker:
@@ -116,17 +118,20 @@ workflows:
   deployment_pipeline:
     jobs:
       - commit
-      - hold:
-          type: approval
-          requires:
-            - commit
       - acceptance:
           requires:
             - hold
-      - uat:
+      - prepare_uat:
           requires:
             - acceptance
-      - release:
+      - uat:
+          type: approval
+          requires:
+            - prepare_uat
+      - release_start:
           type: approval
           requires:
             - uat
+      - release:
+          requires:
+            - release_start
