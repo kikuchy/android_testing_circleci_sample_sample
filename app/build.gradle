@@ -8,10 +8,11 @@ apply plugin: 'jacoco-android'
 
 android {
     compileSdkVersion 28
+    buildToolsVersion "28.0.2"
     defaultConfig {
         applicationId "com.horie1024.android_testing_circleci_sample_sample"
         minSdkVersion 21
-        targetSdkVersion 23
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
