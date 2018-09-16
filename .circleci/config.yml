@@ -101,7 +101,15 @@ jobs:
     steps:
       - attach_workspace:
           at: .
-      - run: ./gradlew aR
+      - run:
+          name: Decrypted keystore
+          command: |
+              openssl aes-256-cbc -d \
+                  -in app/release.keystore.jks.encrypted\
+                  -out app/release.keystore.jks -k $DECRYPTED_KEY
+      - run:
+          name: Run assembleRelease
+          command: ./gradlew assembleRelease
 
 workflows:
   version: 2
