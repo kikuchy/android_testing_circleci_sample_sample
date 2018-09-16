@@ -16,14 +16,8 @@ jobs:
             - ~/.gradle
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
       - run:
-          name: Decrypted keystore
-          command: |
-              openssl aes-256-cbc -d \
-                  -in app/release.keystore.jks.encrypted\
-                  -out app/release.keystore.jks -k $DECRYPTED_KEY -md md5
-      - run:
-          name: Run assembleRelease
-          command: ./gradlew assembleRelease
+          name: openssl version
+          command: openssl version
       - run:
           name: Run Compile
           command: ./gradlew assembleDebug
@@ -114,7 +108,7 @@ jobs:
           name: Decrypted keystore
           command: |
               openssl aes-256-cbc -d \
-                  -in app/release.keystore.jks.encrypted\
+                  -in app/release.keystore.jks.encrypted \
                   -out app/release.keystore.jks -k $DECRYPTED_KEY
       - run:
           name: Run assembleRelease
