@@ -128,10 +128,6 @@ workflows:
           type: approval
           requires:
             - prepare_uat
-      - release_start:
-          type: approval
-          requires:
-            - uat
       - release:
           requires:
-            - release_start
+            - uat
