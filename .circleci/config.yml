@@ -116,9 +116,13 @@ workflows:
   deployment_pipeline:
     jobs:
       - commit
-      - acceptance:
+      - hold:
+          type: approval
           requires:
             - commit
+      - acceptance:
+          requires:
+            - hold
       - uat:
           requires:
             - acceptance
