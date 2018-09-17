@@ -121,13 +121,28 @@ workflows:
       - acceptance:
           requires:
             - commit
-      - prepare_uat:
+      - uat:
           requires:
             - acceptance
-      - uat:
-          type: approval
-          requires:
-            - prepare_uat
       - release:
           requires:
             - uat
+
+#workflows:
+#  version: 2
+#  deployment_pipeline:
+#    jobs:
+#      - commit
+#      - acceptance:
+#          requires:
+#            - commit
+#      - prepare_uat:
+#          requires:
+#            - acceptance
+#      - uat:
+#          type: approval
+#          requires:
+#            - prepare_uat
+#      - release:
+#          requires:
+#            - uat
