@@ -87,7 +87,7 @@ jobs:
 #      - store_test_results:
 #         path: ~/gsutil/
 
-  prepare_uat:
+  uat:
     working_directory: ~/code
     docker:
       - image: circleci/android:api-28-alpha
