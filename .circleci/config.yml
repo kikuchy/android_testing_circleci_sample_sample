@@ -128,18 +128,41 @@ workflows:
   version: 2
   deployment_pipeline:
     jobs:
-      - commit
+      - commit:
+          filters:
+            tags:
+              only: /.*/
       - acceptance:
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              ignore: /.*/
           requires:
             - commit
       - prepare_uat:
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              ignore: /.*/
           requires:
             - acceptance
       - uat:
           type: approval
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              ignore: /.*/
           requires:
             - prepare_uat
       - release:
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              ignore: /.*/
           requires:
             - uat
 #only: /^v[0-9]+(\.[0-9]+)*$/
