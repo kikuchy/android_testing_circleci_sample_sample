@@ -87,7 +87,7 @@ jobs:
 #      - store_test_results:
 #         path: ~/gsutil/
 
-  uat:
+  prepare_uat:
     working_directory: ~/code
     docker:
       - image: circleci/android:api-28-alpha
@@ -126,14 +126,23 @@ workflows:
               ignore: /.*/
           requires:
             - commit
+      - prepare_uat:
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/
+            requires:
+              - acceptance
       - uat:
+          type: approval
           filters:
             tags:
               only: /^v.*/
             branches:
               ignore: /.*/
           requires:
-            - acceptance
+            - prepare_uat
       - release:
           filters:
             tags:
