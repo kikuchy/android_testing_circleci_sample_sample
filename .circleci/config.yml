@@ -137,7 +137,7 @@ workflows:
       - acceptance:
           filters:
             tags:
-              only: /^v[0-9]+(\.[0-9]+)*$/
+              only: /.*/
             branches:
               ignore: /.*/
           requires:
@@ -145,7 +145,7 @@ workflows:
       - prepare_uat:
           filters:
             tags:
-              only: /^v[0-9]+(\.[0-9]+)*$/
+              only: /.*/
             branches:
               ignore: /.*/
           requires:
@@ -154,7 +154,7 @@ workflows:
           type: approval
           filters:
             tags:
-              only: /^v[0-9]+(\.[0-9]+)*$/
+              only: /.*/
             branches:
               ignore: /.*/
           requires:
@@ -162,8 +162,9 @@ workflows:
       - release:
           filters:
             tags:
-              only: /^v[0-9]+(\.[0-9]+)*$/
+              only: /.*/
             branches:
               ignore: /.*/
           requires:
             - uat
+#only: /^v[0-9]+(\.[0-9]+)*$/
