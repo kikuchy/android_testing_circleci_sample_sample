@@ -7,3 +7,4 @@
 /captures
 .externalNativeBuild
 app/release.keystore.jks
+api-*.json

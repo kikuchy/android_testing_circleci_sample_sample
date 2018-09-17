@@ -66,26 +66,26 @@ jobs:
           command: |
               sudo gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
               sudo gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
-#      - run:
-#          name: Run Compile
-#          command: ./gradlew assembleDebugAndroidTest
-#      - run:
-#          name: Test with Firebase Test Lab
-#          command: >
-#              sudo gcloud firebase test android run \
-#                test_settings.yml:instrumentation-test \
-#                --results-bucket cloud-test-${GOOGLE_PROJECT_ID}
-#      - run:
-#          name: Install gsutil dependency and copy test results data
-#          when: always
-#          command: |
-#              sudo pip install -U crcmod
-#              mkdir -p ~/gsutil/
-#              sudo gsutil -m cp -r -U `sudo gsutil ls gs://cloud-test-test-project-8a3d9 | tail -1` ~/gsutil/ | true
-#      - store_artifacts:
-#         path: ~/gsutil/
-#      - store_test_results:
-#         path: ~/gsutil/
+      - run:
+          name: Run Compile
+          command: ./gradlew assembleDebugAndroidTest
+      - run:
+          name: Test with Firebase Test Lab
+          command: >
+              sudo gcloud firebase test android run \
+                test_settings.yml:instrumentation-test \
+                --results-bucket cloud-test-${GOOGLE_PROJECT_ID}
+      - run:
+          name: Install gsutil dependency and copy test results data
+          when: always
+          command: |
+              sudo pip install -U crcmod
+              mkdir -p ~/gsutil/
+              sudo gsutil -m cp -r -U `sudo gsutil ls gs://cloud-test-test-project-8a3d9 | tail -1` ~/gsutil/ | true
+      - store_artifacts:
+         path: ~/gsutil/
+      - store_test_results:
+         path: ~/gsutil/
 
   prepare_uat:
     working_directory: ~/code
@@ -105,21 +105,24 @@ jobs:
                 https://deploygate.com/api/users/horie1024/apps
 
   release:
-    working_directory: ~/code
-    docker:
-      - image: circleci/android:api-28-alpha
-    steps:
-      - attach_workspace:
-          at: .
-      - run:
-          name: Decrypted keystore
-          command: |
-              openssl aes-256-cbc -d \
-                  -in app/release.keystore.jks.encrypted \
-                  -out app/release.keystore.jks -k $DECRYPTED_KEY -md md5
-      - run:
-          name: Run assembleRelease
-          command: ./gradlew assembleRelease
+      working_directory: ~/code
+      docker:
+        - image: circleci/android:api-28-alpha
+      steps:
+        - attach_workspace:
+            at: .
+        - run:
+            name: Store Google Play Android Developer Service Account
+            command: echo $GOOGLE_PLAY_SERVICE_KEY | base64 --decode > ${HOME}/app/google-play-service-key.json
+        - run:
+            name: Decrypted keystore
+            command: |
+                openssl aes-256-cbc -d \
+                    -in app/release.keystore.jks.encrypted \
+                    -out app/release.keystore.jks -k $DECRYPTED_KEY -md md5
+        - run:
+            name: Run publishApkRelease
+            command: ./gradlew publishApkRelease
 
 workflows:
   version: 2
@@ -129,7 +132,7 @@ workflows:
       - acceptance:
           filters:
             tags:
-              only: /^v.*/
+              only: /^v[0-9]+(\.[0-9]+)*$/
             branches:
               ignore: /.*/
           requires:
@@ -137,7 +140,7 @@ workflows:
       - prepare_uat:
           filters:
             tags:
-              only: /^v.*/
+              only: /^v[0-9]+(\.[0-9]+)*$/
             branches:
               ignore: /.*/
           requires:
@@ -146,7 +149,7 @@ workflows:
           type: approval
           filters:
             tags:
-              only: /^v.*/
+              only: /^v[0-9]+(\.[0-9]+)*$/
             branches:
               ignore: /.*/
           requires:
@@ -154,27 +157,8 @@ workflows:
       - release:
           filters:
             tags:
-              only: /^v.*/
+              only: /^v[0-9]+(\.[0-9]+)*$/
             branches:
               ignore: /.*/
           requires:
             - uat
-
-#workflows:
-#  version: 2
-#  deployment_pipeline:
-#    jobs:
-#      - commit
-#      - acceptance:
-#          requires:
-#            - commit
-#      - prepare_uat:
-#          requires:
-#            - acceptance
-#      - uat:
-#          type: approval
-#          requires:
-#            - prepare_uat
-#      - release:
-#          requires:
-#            - uat
