@@ -132,6 +132,8 @@ workflows:
           filters:
             tags:
               only: /.*/
+            branches:
+              only: /.*/
       - acceptance:
           filters:
             tags:
@@ -140,31 +142,7 @@ workflows:
               ignore: /.*/
           requires:
             - commit
-      - prepare_uat:
-          filters:
-            tags:
-              only: /.*/
-            branches:
-              ignore: /.*/
-          requires:
-            - acceptance
-      - uat:
-          type: approval
-          filters:
-            tags:
-              only: /.*/
-            branches:
-              ignore: /.*/
-          requires:
-            - prepare_uat
-      - release:
-          filters:
-            tags:
-              only: /.*/
-            branches:
-              ignore: /.*/
-          requires:
-            - uat
+
 #only: /^v[0-9]+(\.[0-9]+)*$/
 
 #workflows:
