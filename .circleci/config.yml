@@ -119,12 +119,21 @@ workflows:
     jobs:
       - commit
       - acceptance:
+          filters:
+            tags:
+              only: /^v.*/
           requires:
             - commit
       - uat:
+          filters:
+            tags:
+              only: /^v.*/
           requires:
             - acceptance
       - release:
+          filters:
+            tags:
+              only: /^v.*/
           requires:
             - uat
 
