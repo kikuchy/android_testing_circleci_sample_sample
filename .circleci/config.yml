@@ -128,7 +128,7 @@ workflows:
   version: 2
   deployment_pipeline:
     jobs:
-      - commit
+      - commit:
           filters:
             tags:
               only: /.*/
