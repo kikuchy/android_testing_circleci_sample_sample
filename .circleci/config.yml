@@ -122,18 +122,24 @@ workflows:
           filters:
             tags:
               only: /^v.*/
+            branches:
+              ignore: /.*/
           requires:
             - commit
       - uat:
           filters:
             tags:
               only: /^v.*/
+            branches:
+              ignore: /.*/
           requires:
             - acceptance
       - release:
           filters:
             tags:
               only: /^v.*/
+            branches:
+              ignore: /.*/
           requires:
             - uat
 
