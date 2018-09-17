@@ -129,6 +129,11 @@ workflows:
   deployment_pipeline:
     jobs:
       - commit
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              only: /.*/
       - acceptance:
           filters:
             tags:
