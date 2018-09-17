@@ -101,7 +101,7 @@ jobs:
                 -F "token=${DEPLOY_GATE_API_KEY}" \
                 -F "file=@app/build/outputs/apk/debug/app-debug.apk" \
                 -F "message=sample" \
-                -F "distribution_name=${CIRCLE_TAG}"
+                -F "distribution_name=${CIRCLE_TAG}" \
                 https://deploygate.com/api/users/horie1024/apps
 
   release:
