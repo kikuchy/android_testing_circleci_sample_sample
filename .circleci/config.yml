@@ -87,22 +87,23 @@ jobs:
 #      - store_test_results:
 #         path: ~/gsutil/
 
-  prepare_manual_test:
+  #prepare_manual_test
+  anual_test:
     working_directory: ~/code
     docker:
       - image: circleci/android:api-28-alpha
     steps:
       - attach_workspace:
           at: .
-      - run:
-          name: Run Deploy
-          command: |
-              curl \
-                -F "token=${DEPLOY_GATE_API_KEY}" \
-                -F "file=@app/build/outputs/apk/debug/app-debug.apk" \
-                -F "message=manual test" \
-                -F "distribution_name=${CIRCLE_BRANCH}" \
-                https://deploygate.com/api/users/${DEPLOY_GATE_OWNER_NAME}/apps
+#      - run:
+#          name: Run Deploy
+#          command: |
+#              curl \
+#                -F "token=${DEPLOY_GATE_API_KEY}" \
+#                -F "file=@app/build/outputs/apk/debug/app-debug.apk" \
+#                -F "message=manual test" \
+#                -F "distribution_name=${CIRCLE_BRANCH}" \
+#                https://deploygate.com/api/users/${DEPLOY_GATE_OWNER_NAME}/apps
 
   release:
       working_directory: ~/code
@@ -128,42 +129,57 @@ workflows:
   version: 2
   deployment_pipeline:
     jobs:
-      - commit:
-          filters:
-            tags:
-              only: /.*/
-            branches:
-              only: /.*/
+      - commit
       - acceptance:
-          filters:
-            tags:
-              only: /.*/
-            branches:
-              only: master
           requires:
             - commit
-      - prepare_manual_test:
-          filters:
-            tags:
-              only: /.*/
-            branches:
-              only: master
+      - manual_test:
           requires:
             - acceptance
-      - manual_test:
-          type: approval
-          filters:
-            tags:
-              only: /.*/
-            branches:
-              only: master
-          requires:
-            - prepare_manual_test
       - release:
-          filters:
-            tags:
-              only: /^v[0-9]+(\.[0-9]+)*$/
-            branches:
-              ignore: /.*/
           requires:
             - manual_test
+
+#workflows:
+#  version: 2
+#  deployment_pipeline:
+#    jobs:
+#      - commit:
+#          filters:
+#            tags:
+#              only: /.*/
+#            branches:
+#              only: /.*/
+#      - acceptance:
+#          filters:
+#            tags:
+#              only: /.*/
+#            branches:
+#              only: master
+#          requires:
+#            - commit
+#      - prepare_manual_test:
+#          filters:
+#            tags:
+#              only: /.*/
+#            branches:
+#              only: master
+#          requires:
+#            - acceptance
+#      - manual_test:
+#          type: approval
+#          filters:
+#            tags:
+#              only: /.*/
+#            branches:
+#              only: master
+#          requires:
+#            - prepare_manual_test
+#      - release:
+#          filters:
+#            tags:
+#              only: /^v[0-9]+(\.[0-9]+)*$/
+#            branches:
+#              ignore: /.*/
+#          requires:
+#            - manual_test
