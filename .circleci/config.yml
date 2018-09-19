@@ -44,7 +44,7 @@ jobs:
               curl \
                 -F "token=${DEPLOY_GATE_API_KEY}" \
                 -F "file=@app/build/outputs/apk/debug/app-debug.apk" \
-                -F "message=sample" \
+                -F "message=for developers" \
                 https://deploygate.com/api/users/horie1024/apps
       - persist_to_workspace:
           root: .
@@ -100,7 +100,7 @@ jobs:
               curl \
                 -F "token=${DEPLOY_GATE_API_KEY}" \
                 -F "file=@app/build/outputs/apk/debug/app-debug.apk" \
-                -F "message=sample" \
+                -F "message=manual test" \
                 -F "distribution_name=${CIRCLE_BRANCH}" \
                 https://deploygate.com/api/users/horie1024/apps
 
