@@ -45,7 +45,7 @@ jobs:
                 -F "token=${DEPLOY_GATE_API_KEY}" \
                 -F "file=@app/build/outputs/apk/debug/app-debug.apk" \
                 -F "message=for developers" \
-                https://deploygate.com/api/users/horie1024/apps
+                https://deploygate.com/api/users/${DEPLOY_GATE_OWNER_NAME}/apps
       - persist_to_workspace:
           root: .
           paths:
@@ -102,7 +102,7 @@ jobs:
                 -F "file=@app/build/outputs/apk/debug/app-debug.apk" \
                 -F "message=manual test" \
                 -F "distribution_name=${CIRCLE_BRANCH}" \
-                https://deploygate.com/api/users/horie1024/apps
+                https://deploygate.com/api/users/${DEPLOY_GATE_OWNER_NAME}/apps
 
   release:
       working_directory: ~/code
