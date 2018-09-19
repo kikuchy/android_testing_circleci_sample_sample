@@ -87,7 +87,7 @@ jobs:
       - store_test_results:
          path: ~/gsutil/
 
-  prepare_mt:
+  prepare_manual_test:
     working_directory: ~/code
     docker:
       - image: circleci/android:api-28-alpha
@@ -142,7 +142,7 @@ workflows:
               only: master
           requires:
             - commit
-      - prepare_mt:
+      - prepare_manual_test:
           filters:
             tags:
               only: /.*/
@@ -150,7 +150,7 @@ workflows:
               only: master
           requires:
             - acceptance
-      - mt:
+      - manual_test:
           type: approval
           filters:
             tags:
@@ -158,7 +158,7 @@ workflows:
             branches:
               only: master
           requires:
-            - prepare_mt
+            - prepare_manual_test
       - release:
           filters:
             tags:
@@ -166,4 +166,4 @@ workflows:
             branches:
               ignore: /.*/
           requires:
-            - mt
+            - manual_test
