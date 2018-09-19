@@ -15,37 +15,37 @@ jobs:
           paths:
             - ~/.gradle
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
-      - run:
-          name: Run Compile
-          command: ./gradlew assembleDebug
-      - run:
-          name: Run Inspection
-          command: ./gradlew lint
-      - run:
-          name: Run Tests
-          command: ./gradlew jacocoTestReport
-      - run:
-          name: Run Save coverage
-          command: |
-              curl -s https://codecov.io/bash > .codecov
-              chmod +x .codecov
-              ./.codecov
-      - run:
-          name: Run Save test results
-          command: |
-              mkdir -p ~/junit/
-              find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} ~/junit/ \;
-          when: always
-      - store_test_results:
-          path: ~/junit
-      - run:
-          name: Run Deploy
-          command: |
-              curl \
-                -F "token=${DEPLOY_GATE_API_KEY}" \
-                -F "file=@app/build/outputs/apk/debug/app-debug.apk" \
-                -F "message=for developers" \
-                https://deploygate.com/api/users/${DEPLOY_GATE_OWNER_NAME}/apps
+#      - run:
+#          name: Run Compile
+#          command: ./gradlew assembleDebug
+#      - run:
+#          name: Run Inspection
+#          command: ./gradlew lint
+#      - run:
+#          name: Run Tests
+#          command: ./gradlew jacocoTestReport
+#      - run:
+#          name: Run Save coverage
+#          command: |
+#              curl -s https://codecov.io/bash > .codecov
+#              chmod +x .codecov
+#              ./.codecov
+#      - run:
+#          name: Run Save test results
+#          command: |
+#              mkdir -p ~/junit/
+#              find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} ~/junit/ \;
+#          when: always
+#      - store_test_results:
+#          path: ~/junit
+#      - run:
+#          name: Run Deploy
+#          command: |
+#              curl \
+#                -F "token=${DEPLOY_GATE_API_KEY}" \
+#                -F "file=@app/build/outputs/apk/debug/app-debug.apk" \
+#                -F "message=for developers" \
+#                https://deploygate.com/api/users/${DEPLOY_GATE_OWNER_NAME}/apps
       - persist_to_workspace:
           root: .
           paths:
@@ -128,57 +128,42 @@ workflows:
   version: 2
   deployment_pipeline:
     jobs:
-      - commit
+      - commit:
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              only: /.*/
       - acceptance:
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              only: master
           requires:
             - commit
-      - manual_test:
+      - prepare_manual_test:
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              only: master
           requires:
             - acceptance
+      - manual_test:
+          type: approval
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              only: master
+          requires:
+            - prepare_manual_test
       - release:
+          filters:
+            tags:
+              only: /^v[0-9]+(\.[0-9]+)*$/
+            branches:
+              ignore: /.*/
           requires:
             - manual_test
-
-#workflows:
-#  version: 2
-#  deployment_pipeline:
-#    jobs:
-#      - commit:
-#          filters:
-#            tags:
-#              only: /.*/
-#            branches:
-#              only: /.*/
-#      - acceptance:
-#          filters:
-#            tags:
-#              only: /.*/
-#            branches:
-#              only: master
-#          requires:
-#            - commit
-#      - prepare_manual_test:
-#          filters:
-#            tags:
-#              only: /.*/
-#            branches:
-#              only: master
-#          requires:
-#            - acceptance
-#      - manual_test:
-#          type: approval
-#          filters:
-#            tags:
-#              only: /.*/
-#            branches:
-#              only: master
-#          requires:
-#            - prepare_manual_test
-#      - release:
-#          filters:
-#            tags:
-#              only: /^v[0-9]+(\.[0-9]+)*$/
-#            branches:
-#              ignore: /.*/
-#          requires:
-#            - manual_test
