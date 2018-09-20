@@ -88,7 +88,7 @@ jobs:
 #         path: ~/gsutil/
 
   #prepare_manual_test
-  anual_test:
+  manual_test:
     working_directory: ~/code
     docker:
       - image: circleci/android:api-28-alpha
