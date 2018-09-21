@@ -7,7 +7,7 @@ instrumentation-test:
       version: 21
       locale: ja_JP
       orientation: portrait
-#    - model: mata
-#      version: 25
-#      locale: ja_JP
-#      orientation: portrait
+    - model: mata
+      version: 25
+      locale: ja_JP
+      orientation: portrait
