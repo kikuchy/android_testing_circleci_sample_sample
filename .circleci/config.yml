@@ -38,6 +38,8 @@ jobs:
           when: always
       - store_test_results:
           path: ~/junit
+      - store_artifacts:
+          path: ~/junit
       - run:
           name: Run Deploy
           command: |
