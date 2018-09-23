@@ -27,10 +27,10 @@ android {
             storePassword "debugkeypass"
         }
         release {
-            keyAlias "$System.env.RELEASE_ALIAS" //"release-alias"
-            keyPassword "$System.env.RELEASE_ALIAS_PASS" //"release"
+            keyAlias "$System.env.RELEASE_ALIAS"
+            keyPassword "$System.env.RELEASE_ALIAS_PASS"
             storeFile file("release.keystore.jks")
-            storePassword "$System.env.RELEASE_KEYSTORE_PASS"//"release"
+            storePassword "$System.env.RELEASE_KEYSTORE_PASS"
         }
     }
     buildTypes {
