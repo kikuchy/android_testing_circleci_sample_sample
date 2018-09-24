@@ -38,72 +38,10 @@ jobs:
           when: always
       - store_test_results:
           path: ~/junit
-      - run:
-          name: Run Deploy
-          command: |
-              curl \
-                -F "token=${DEPLOY_GATE_API_KEY}" \
-                -F "file=@app/build/outputs/apk/debug/app-debug.apk" \
-                -F "message=for developers" \
-                https://deploygate.com/api/users/${DEPLOY_GATE_OWNER_NAME}/apps
       - persist_to_workspace:
           root: .
           paths:
             - .
-
-  acceptance:
-    working_directory: ~/code
-    docker:
-      - image: circleci/android:api-28-alpha
-    steps:
-      - attach_workspace:
-          at: .
-      - run:
-          name: Store Google Service Account
-          command: echo $GCLOUD_SERVICE_KEY | base64 --decode > ${HOME}/gcloud-service-key.json
-      - run:
-          name: Authorize gcloud and set config defaults
-          command: |
-              sudo gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
-              sudo gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
-      - run:
-          name: Run Compile
-          command: ./gradlew assembleDebugAndroidTest
-      - run:
-          name: Test with Firebase Test Lab
-          command: >
-              sudo gcloud firebase test android run \
-                test_settings.yml:instrumentation-test \
-                --results-bucket cloud-test-${GOOGLE_PROJECT_ID}
-      - run:
-          name: Install gsutil dependency and copy test results data
-          when: always
-          command: |
-              sudo pip install -U crcmod
-              mkdir -p ~/gsutil/
-              sudo gsutil -m cp -r -U `sudo gsutil ls gs://cloud-test-test-project-8a3d9 | tail -1` ~/gsutil/ | true
-      - store_artifacts:
-         path: ~/gsutil/
-      - store_test_results:
-         path: ~/gsutil/
-
-  prepare_manual_test:
-    working_directory: ~/code
-    docker:
-      - image: circleci/android:api-28-alpha
-    steps:
-      - attach_workspace:
-          at: .
-      - run:
-          name: Run Deploy
-          command: |
-              curl \
-                -F "token=${DEPLOY_GATE_API_KEY}" \
-                -F "file=@app/build/outputs/apk/debug/app-debug.apk" \
-                -F "message=manual test" \
-                -F "distribution_name=${CIRCLE_BRANCH}" \
-                https://deploygate.com/api/users/${DEPLOY_GATE_OWNER_NAME}/apps
-
   release:
       working_directory: ~/code
       docker:
@@ -134,22 +72,6 @@ workflows:
               only: /.*/
             branches:
               only: /.*/
-      - acceptance:
-          filters:
-            tags:
-              only: /.*/
-            branches:
-              only: master
-          requires:
-            - commit
-      - prepare_manual_test:
-          filters:
-            tags:
-              only: /.*/
-            branches:
-              only: master
-          requires:
-            - acceptance
       - manual_test:
           type: approval
           filters:
@@ -158,7 +80,7 @@ workflows:
             branches:
               only: master
           requires:
-            - prepare_manual_test
+            - commit
       - release:
           filters:
             tags:
