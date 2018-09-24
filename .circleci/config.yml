@@ -133,7 +133,7 @@ workflows:
             tags:
               only: /.*/
             branches:
-              only: /^hoge/
+              ignore: /^hoge/
       - acceptance:
           filters:
             tags:
